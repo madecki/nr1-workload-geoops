@@ -4,33 +4,31 @@
  */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Modal, LineChart, TableChart, HeadingText, BlockText, Tabs, TabsItem } from 'nr1';
+import { LineChart, TableChart, HeadingText, BlockText, Tabs, TabsItem } from 'nr1';
 import EntityTable from './entity-table';
 import geoopsConfig from "../../geoopsConfig";
 import moment from 'moment';
 
-export default class DetailModal extends Component {
+export default class DetailPane extends Component {
   static propTypes = {
     configId: PropTypes.any.isRequired,
     data: PropTypes.array.isRequired,
-    hidden: PropTypes.bool.isRequired,
     location: PropTypes.object.isRequired,
     callbacks: PropTypes.object.isRequired,
-    launcherUrlState: PropTypes.object.isRequired
+    platformUrlState: PropTypes.object.isRequired
   }
 
   render() {
-    const { configId, location, hidden, callbacks } = this.props;
+    const { configId, location, callbacks } = this.props;
     const config = geoopsConfig.find(c => c.id == configId);
     const infraGuidsForNrql = location.entities.filter(e => e.domain == 'INFRA').map(entity => `'${entity.guid}'`);
     const apmGuidsForNrql = location.entities.filter(e => e.domain == 'APM').map(entity => `'${entity.guid}'`);
-    const { duration } = this.props.launcherUrlState.timeRange;
+    const { duration } = this.props.platformUrlState.timeRange;
     const since = moment().subtract(duration).fromNow();
     const durationInMinutes = duration/1000/60;
     const { accountId } = config.entities.joins.INFRA.nrql;
     console.debug([infraGuidsForNrql, apmGuidsForNrql]);
     return (
-      <Modal className="entityModal" hidden={hidden} onClose={() => { callbacks.closeModal(); }} style={{padding: '0 !important'}}>
         <div className="modalContainer">
           <div className="headingContainer">
             <div className="storeStatus" style={{ backgroundColor: location.status.color}}></div>
@@ -103,7 +101,6 @@ export default class DetailModal extends Component {
             </Tabs>
           </div>
         </div>
-      </Modal>
     );
   }
 }
