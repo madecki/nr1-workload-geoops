@@ -162,6 +162,7 @@ export default class ViewMapQuery extends React.PureComponent {
                                           How does 'entities' change without re-running any queries?
                                           Temporarily we're storing a copy in local state in AlertsReducer which "fixes" this
                                         */
+
                                         return (
                                           <AlertsReducer
                                             mapLocations={mapLocations}
